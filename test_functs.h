@@ -14,6 +14,6 @@ int is_a_prime(uint64_t);
 
 int is_a_perfect_square(uint64_t);
 
-int is_a_perfect_cude(int64_t);
+int is_a_perfect_cube(int64_t);
 
 #endif

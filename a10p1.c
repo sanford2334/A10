@@ -4,7 +4,8 @@
  * Date:      14/11/2013
  * Version:   1.0
  *
- * Purpose:
+ * Purpose:   To compute very large numbers iteratively and recursively, and
+ *            time how long each takes to run
  */
 
 #include <stdio.h>
@@ -15,9 +16,9 @@
 
 /*
  * Name:      fast_Power
- * Purpose:
- * Arguments:
- * Returns:
+ * Purpose:   recursively compute the entered numbers
+ * Arguments: uint64_t base, uint64_t power, and uint64_t of modulus
+ * Returns:   value of k^n%m
  */
 
 uint64_t fast_Power(uint64_t k, uint64_t n, uint32_t m)
@@ -40,10 +41,12 @@ uint64_t fast_Power(uint64_t k, uint64_t n, uint32_t m)
 
 /*
  * Name:      normal_Power
- * Purpose:
- * Arguments:
- * Returns:
+ * Purpose:   iteratively compute the entered numbers
+ * Arguments: uint64_t base, uint64_t power, and uint64_t of modulus
+ * Returns:   value of k^n%m
  */
+
+
 
 uint64_t normal_Power(uint64_t k, uint64_t n, uint32_t m)
 {
@@ -61,7 +64,7 @@ int main(int argc, char * argv[])
     uint64_t k_in, catch_fast, catch_iter;
     if (argc != 3)
     {
-        fprintf(stderr, "Error: Invalid Number of Inputs!");
+        fprintf(stderr, "Error: Invalid Number of Inputs!\n");
         return EXIT_FAILURE;
     }
     if (argv[1] < argv[2])
@@ -74,6 +77,10 @@ int main(int argc, char * argv[])
         sscanf(argv[1], "%" SCNu32, &m_in);
         sscanf(argv[2], "%" SCNu64, &k_in);
     }
+    printf("    n  | %7" PRIu64 "^n mod %-13" PRIu32 " |   fast time   "
+           "|   iterative time\n", k_in, m_in);
+    printf("-------+-----------------------------+---------------"
+           "+--------------------\n");
     for (int i = 0; i <= 10; i++)
     {
         clock_gettime(CLOCK_REALTIME, &start_time);
@@ -90,11 +97,14 @@ int main(int argc, char * argv[])
 
         t_fast = total_fast.tv_sec + total_fast.tv_nsec / 1000000000.0;
         t_iter = total_iter.tv_sec + total_iter.tv_nsec / 1000000000.0;
-
-        printf("%" PRIu64 "\n", catch_fast);
-        printf("%" PRIu64 "\n", catch_iter);
-        printf("%g\n", t_fast);
-        printf("%g\n", t_iter);
+        if (catch_iter == catch_fast)
+            printf(" 10^%-2d |   %25" PRIu64 " |  %11g  |  %11g\n", 
+                   i, catch_fast, t_fast, t_iter);
+        else
+        {
+            fprintf(stderr, "Error, return values not equal!\n");
+            return EXIT_FAILURE;
+        }
     }
     return EXIT_SUCCESS;
 }
